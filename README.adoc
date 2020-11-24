@@ -87,9 +87,9 @@ endif::[]
 //------------------------------------ 
 == {assignment}
 
-{lastName}:: BRUEL
+{lastName}:: CASTOR
 
-{firstName}:: Jean-Michel
+{firstName}:: Julien
 
 {group} #::
 
