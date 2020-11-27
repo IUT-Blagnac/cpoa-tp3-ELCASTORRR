@@ -1,4 +1,4 @@
-# -- coding: utf-8 --
+# -*- coding: utf-8 -*-
 # usage: ruby checkfix#.rb [file]
 # -------------------
 # Author::    Jean-Michel Bruel  (mailto:jbruel@gmail.com) 
@@ -13,9 +13,9 @@ File.open(README, :encoding => 'utf-8') { |f|
   result = true
 
   content = f.read
-  lastName = content.scan(/{lastName}:: (\w+)/) 
-  firstName = content.scan(/{firstName}:: ([\w|-]+)/)
-  groupNb = content.scan(/- [[x|X]] ([\w|{|}]+)/)
+  lastName = content.scan(/\{lastName\}:: (\w+)/) 
+  firstName = content.scan(/\{firstName\}:: ([\w|\-]+)/)
+  groupNb = content.scan(/\- \[[x|X]\] ([\w|\{|\}]+)/)
 
   print "----------------------------------\n"
   print "Looking for fix #" + fixNb[0] + " rules...\n"
@@ -36,7 +36,7 @@ File.open(README, :encoding => 'utf-8') { |f|
   end
 
   if !result 
-    print "/!\FAILURE: Your info need to be updated in " +  README  + "\n"
+    print "/!\\FAILURE: Your info need to be updated in " +  README  + "\n"
     exit 1
   end
   exit 0
