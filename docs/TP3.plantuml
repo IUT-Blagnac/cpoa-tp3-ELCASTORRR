@@ -1,0 +1,122 @@
+@startuml
+
+abstract class Pizza [[java:main.java.Pizza]] {
+	~String nom
+	~String pate
+	~String sauce
+	~ArrayList<String> garnitures
+	~{abstract}void preparer()
+	+void cuire()
+	~{abstract}void couper()
+	+void emballer()
+	+String getNom()
+	+void setNom(String pNom)
+}
+
+abstract class PizzaFactory [[java:main.java.PizzaFactory]] {
+	+{abstract}Pizza creer(String name)
+}
+
+class PizzaFactoryBrest [[java:main.java.PizzaFactoryBrest]] {
+	-{static}PizzaFactoryBrest instance
+	+Pizza creer(String name)
+	+{static}PizzaFactoryBrest getInstance()
+}
+
+PizzaFactory <|-- PizzaFactoryBrest
+
+class PizzaFactoryStrasbourg [[java:main.java.PizzaFactoryStrasbourg]] {
+	-{static}PizzaFactoryStrasbourg instance
+	+Pizza creer(String name)
+	+{static}PizzaFactoryStrasbourg getInstance()
+}
+
+PizzaFactory <|-- PizzaFactoryStrasbourg
+
+class PizzaFromageStyleBrest [[java:main.java.PizzaFromageStyleBrest]] {
+	+PizzaFromageStyleBrest()
+	#void preparer()
+	#void couper()
+}
+
+Pizza <|-- PizzaFromageStyleBrest
+
+class PizzaFromageStyleStrasbourg [[java:main.java.PizzaFromageStyleStrasbourg]] {
+	+PizzaFromageStyleStrasbourg()
+	#void preparer()
+	~void couper()
+}
+
+Pizza <|-- PizzaFromageStyleStrasbourg
+
+class PizzaGrecqueStyleBrest [[java:main.java.PizzaGrecqueStyleBrest]] {
+	+PizzaGrecqueStyleBrest()
+	#void preparer()
+	#void couper()
+}
+
+Pizza <|-- PizzaGrecqueStyleBrest
+
+class PizzaGrecqueStyleStrasbourg [[java:main.java.PizzaGrecqueStyleStrasbourg]] {
+	+PizzaGrecqueStyleStrasbourg()
+	#void preparer()
+	#void couper()
+}
+
+Pizza <|-- PizzaGrecqueStyleStrasbourg
+
+class PizzaPoivronStyleBrest [[java:main.java.PizzaPoivronStyleBrest]] {
+	+PizzaPoivronStyleBrest()
+	#void preparer()
+	#void couper()
+}
+
+Pizza <|-- PizzaPoivronStyleBrest
+
+class PizzaPoivronStyleStrasbourg [[java:main.java.PizzaPoivronStyleStrasbourg]] {
+	+PizzaPoivronStyleStrasbourg()
+	#void preparer()
+	~void couper()
+}
+
+Pizza <|-- PizzaPoivronStyleStrasbourg
+class PizzaTestDrive [[java:main.java.PizzaTestDrive]] {
+	+{static}void main(String[] args)
+}
+abstract class Pizzeria [[java:main.java.Pizzeria]] {
+	~PizzaFactory pizzaFactory
+	#Pizzeria(PizzaFactory pPizzaFactory)
+	+{abstract}Pizza commanderPizza(String type)
+	#{abstract}Pizza creerPizza(String type)
+}
+
+class PizzeriaBrest [[java:main.java.PizzeriaBrest]] {
+	#PizzeriaBrest(PizzaFactory pPizzaFactory)
+	+Pizza commanderPizza(String type)
+	+String toString()
+	#Pizza creerPizza(String type)
+}
+
+Pizzeria <|-- PizzeriaBrest
+
+class PizzeriaFactory [[java:main.java.PizzeriaFactory]] {
+	-{static}PizzeriaFactory uniqueInstance
+	#PizzeriaFactory()
+	+{static}PizzeriaFactory getInstance()
+	+Pizzeria creer(String pNom)
+}
+
+class PizzeriaStrasbourg [[java:main.java.PizzeriaStrasbourg]] {
+	#PizzeriaStrasbourg(PizzaFactory pPizzaFactory)
+	+Pizza commanderPizza(String type)
+	+String toString()
+	#Pizza creerPizza(String type)
+}
+
+Pizzeria <|-- PizzeriaStrasbourg
+Pizzeria --> "1" PizzaFactory : PizzaFactory
+PizzeriaFactory ..> Pizzeria
+PizzaTestDrive ..> Pizza
+PizzaTestDrive ..> PizzeriaFactory
+PizzaFactory ..> Pizza
+@enduml
