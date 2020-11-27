@@ -1,63 +1,43 @@
 # -- coding: utf-8 --
-# usage: ruby checkModel.rb [file]
+# usage: ruby checkfix#.rb [file]
 # -------------------
-# Author::    Jean-Michel Bruel  (mailto:jbruel@gmail.com) improved by JMI
-# Copyright:: Copyright (c) 2014--2020 JMB
+# Author::    Jean-Michel Bruel  (mailto:jbruel@gmail.com) 
+# Copyright:: Copyright (c) 2020 JMB
 # License::   Distributes under the same terms as Ruby
 # -------------------
 
-require "minitest/autorun"
+README = ARGV[0] ? ARGV[0] : "../README.adoc"
 
-MODEL_NAME = ARGV[0] ? ARGV[0] : "TP3.plantuml"
+fixNb = FILE.scan(/\d+/)
+File.open(README, :encoding => 'utf-8') { |f|
+  result = true
 
-module MiniTest
-  class Unit
-    class TestCase
-      #Define new assertion
-      def assert_contains(string_to_test, substring_to_verify)
-        assert_match( string_to_test, substring_to_verify)
-      end
-      def assert_not_contains(string_to_test, substring_to_verify)
-        assert_not_match( string_to_test, substring_to_verify)
-      end
-    end
-  end
-end
-Minitest.after_run { p @_assertions }
+  content = f.read
+  lastName = content.scan(/{lastName}:: (\w+)/) 
+  firstName = content.scan(/{firstName}:: ([\w|-]+)/)
+  groupNb = content.scan(/- [[x|X]] ([\w|{|}]+)/)
 
-class TestGeneratedModel < Minitest::Test
+  print "----------------------------------\n"
+  print "Looking for fix #" + fixNb[0] + " rules...\n"
 
-  #------------ General tests about plantUML
-
-  def test_generated_model_exists
-    assert_equal(true, File.exists?(MODEL_NAME))
+  # Checking Name
+  if (lastName[0][0] == "BRUEL") && (firstName[0][0] == "Jean-Michel")
+    result = false
+  else
+    print "SUCCESS: Last Name = " + lastName[0][0] + "\n"
+    print "SUCCESS: First Name = " + firstName[0][0] + "\n"
   end
 
-  def test_generated_model_is_plantuml
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/@startuml/).any?)
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/@enduml/).any?)
+  # Checking Group
+  if groupNb[0][0] != "{Enseignants}"
+    print "SUCCESS: Group = " + groupNb[0][0] + "\n"
+  else
+    result = false
   end
 
-  #------------ Specific tests about expected content
-
-  def test_class_Pizza_is_abstract
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/abstract class Pizza\s/).any?)
+  if !result 
+    print "/!\FAILURE: Your info need to be updated in " +  README  + "\n"
+    exit 1
   end
-
-  def test_class_Pizzeria_is_abstract
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/abstract class Pizzeria\s/).any?)
-  end
-
-  def test_class_Pizzeria_has_Factory
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/Pizzeria\s+[o|"<>"|-]-+> "[\d|.]" .Factory./).any?)
-  end
-
-  def test_Pizzeria_has_concrete_implementation
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/Pizzeria\s+<|--/).any?)
-  end
-
-  def test_Pizza_has_concrete_implementation
-    assert_equal(true, File.readlines(MODEL_NAME).grep(/Pizza\s+<|--/).any?)
-  end
-
-end
+  exit 0
+}
